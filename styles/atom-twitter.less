@@ -1,0 +1,148 @@
+// The ui-variables file is provided by base themes provided by Atom.
+//
+// See https://github.com/atom/atom-dark-ui/blob/master/styles/ui-variables.less
+// for a full listing of what's available.
+
+@import "ui-variables";
+@import "../node_modules/font-awesome/less/font-awesome.less";
+
+@fa-font-path: "atom://atom-twitter/node_modules/font-awesome/fonts";
+
+// override font-face to remove query strings
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('@{fa-font-path}/fontawesome-webfont.eot');
+  src: url('@{fa-font-path}/fontawesome-webfont.eot') format('embedded-opentype'),
+    url('@{fa-font-path}/fontawesome-webfont.woff2') format('woff2'),
+    url('@{fa-font-path}/fontawesome-webfont.woff') format('woff'),
+    url('@{fa-font-path}/fontawesome-webfont.ttf') format('truetype'),
+    url('@{fa-font-path}/fontawesome-webfont.svg?') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.twitter.info {
+    font-family: Arial, "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Osaka, "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+
+    &.profile-image {
+        width: 32px;
+        height: 32px;
+        border-radius: 5px;
+    }
+}
+
+.twitter {
+    overflow: auto;
+
+    .panel-body {
+        color: @text-color;
+        font-family: Arial, "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Osaka, "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+        font-size: 1.1em;
+        line-height: 1.3em;
+
+        ul, li {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        li.tweet {
+            display: block;
+            padding: 9px 12px;
+            min-height: 55px;
+            border-bottom: 1px solid @base-border-color;
+
+            background-color: @tab-bar-background-color;
+            transition: background-color 1s ease-out;
+
+            &.tick {
+                background-color: @background-color-highlight;
+            }
+
+            .content {
+                margin-left: 58px;
+            }
+
+            .header {
+                margin-left: 5px;
+
+                .retweeted_by {
+                    margin-bottom: 2px;
+
+                    i {
+                        margin-left: -58px;
+                        float: left;
+                        width: 48px;
+                        border-radius: 5px;
+                        text-align: right;
+                        color: #77b255;
+                        background: transparent;
+                    }
+                }
+
+                .user .image {
+                    margin-left: -58px;
+                    float: left;
+                    width: 48px;
+                    height: 48px;
+                    border-radius: 5px;
+                }
+
+                .screen-name, .time {
+                    s {
+                        text-decoration: none;
+                    }
+
+                    margin-left: 5px;
+                }
+
+                .time {
+                    &:before {
+                        content: "\00b7";
+                    }
+                }
+            }
+
+            .body {
+                margin: 3px 0 0 5px;
+                line-height: inherit;
+            }
+
+            .media div {
+              margin: 8px 0 3px;
+              width: 60%;
+              height: 100px;
+              background-position: center center;
+              background-size: cover;
+              background-repeat: no-repeat;
+              border-radius: 5px;
+            }
+
+            .actions {
+              max-width: 250px;
+              margin: 8px 0 0 5px;
+
+              .action {
+                cursor: pointer;
+                display: inline-block;
+                width: 20%;
+                font-size: 14px;
+                color: @text-color-subtle;
+
+                &.on {
+                  color: @text-color-success;
+                }
+
+                .count {
+                  font-size: 0.8em;
+                  margin-left: 2px;
+                }
+              }
+            }
+        }
+
+        .hide {
+            display: none;
+        }
+    }
+}

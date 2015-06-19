@@ -1,0 +1,26 @@
+# See https://atom.io/docs/latest/hacking-atom-package-word-count#menus for more details
+'context-menu':
+  'atom-text-editor': [
+    {
+      'label': 'Toggle atom-twitter'
+      'command': 'atom-twitter:toggle'
+    }
+  ]
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'Twitter'
+      'submenu': [
+        {
+          'label': 'Search'
+          'command': 'atom-twitter:search'
+        },
+        {
+          'label': 'Home'
+          'command': 'atom-twitter:home'
+        }
+      ]
+    ]
+  }
+]

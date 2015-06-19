@@ -1,0 +1,28 @@
+{
+  "name": "atom-twitter",
+  "main": "./lib/main",
+  "version": "0.0.1",
+  "description": "Twitter client for Atom",
+  "keywords": [
+  ],
+  "activationCommands": {
+    "atom-workspace": [
+      "atom-twitter:search",
+      "atom-twitter:home"
+    ]
+  },
+  "repository": "https://github.com/p-baleine/atom-twitter",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=0.174.0 <2.0.0"
+  },
+  "dependencies": {
+    "atom-space-pen-views": "*",
+    "bluebird": "*",
+    "font-awesome": "*",
+    "moment-twitter": "*",
+    "request": "*",
+    "uuid": "*",
+    "underscore": "*"
+  }
+}
