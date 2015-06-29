@@ -19,6 +19,7 @@
   "dependencies": {
     "atom-space-pen-views": "*",
     "bluebird": "*",
+    "db.js": "*",
     "font-awesome": "*",
     "moment-twitter": "*",
     "request": "*",

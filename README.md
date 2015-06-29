@@ -19,18 +19,6 @@ Register this package to atom.io.
 $ # apm install atom-twitter
 ```
 
-## Settings
-
-Create your [twitter application](https://apps.twitter.com/) and set `consumerKey`, `consumerSecret`, `accessToken` and `accessTokenSecret`.
-
-```bash
-"atom-twitter":
-  "consumerKey": "your consumer key"
-  "consumerSecret": "your consumer secret"
-  "accessToken": "your access token"
-  "accessTokenSecret": "your access token secret"
-```
-
 ## Usage
 
 ### Home timeline
@@ -47,5 +35,6 @@ Create your [twitter application](https://apps.twitter.com/) and set `consumerKe
 * README
 * Travis?
 * task
-* retry parse delimited count
 * connection status
+* friends -> hide follow botton
+* why open search on authentication?
