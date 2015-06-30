@@ -1,7 +1,6 @@
 uuid = require 'uuid'
 {Emitter} = require 'atom'
 TwitterStreamClient = require "./twitter-stream-client"
-{AuthorizationRequired} = require "./exceptions"
 
 class TwitterStream extends Emitter
   constructor: (@oauth, @options) ->
@@ -17,10 +16,7 @@ class TwitterStream extends Emitter
     if response.statusCode is 200
       @emit "response", response
     else
-      if response.statusMessage.match /Authorization Required/
-        @emit "error", new AuthorizationRequired
-      else
-        @emit "error", response.statusMessage
+      @emit "error", response.statusMessage
 
   destroy: ->
     @client?.destroy()

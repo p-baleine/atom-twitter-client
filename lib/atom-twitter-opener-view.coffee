@@ -1,28 +1,30 @@
+_ = require "underscore"
 {$, View, TextEditorView} = require 'atom-space-pen-views'
 AtomTwitterTimelineView = require './atom-twitter-timeline-view'
-{AuthorizationRequired} = require "./exceptions"
 {CompositeDisposable} = require 'atom'
+database = require "./database"
+Logger = require "./logger"
+Promise = require "bluebird"
 {PublicStream,UserStream} = require './twitter-stream'
 TwitterRestClient = require "./twitter-rest-client"
 url = require 'url'
-utils = require "./utils"
+
+AUTH_URL = "https://atom-twitter-auth-serv.herokuapp.com/auth"
 
 module.exports =
 class AtomTwitterOpenerView extends View
   atomTwitterTimelineViewDict: {}
   modalPanel: null
   subscriptions: null
+  publicStream: null
 
   @content: ->
     @div class: 'twitter-opener', =>
       @subview 'miniEditor', new TextEditorView mini: true, placeholderText: "Search..."
 
+  log: new Logger("AtomTwitterOpenerView")
+
   initialize: (state) ->
-    {oauth} = @getConfigs()
-    @currentUserId = utils.getCurrentUserId()
-    @publicStream = new PublicStream oauth
-    @userStream = new UserStream oauth
-    @rest = new TwitterRestClient oauth
     bufferSize = atom.config.get "atom-twitter.timlineBufferSize"
 
     @modalPanel = atom.workspace.addModalPanel(item: @)
@@ -49,26 +51,29 @@ class AtomTwitterOpenerView extends View
           view = new AtomTwitterTimelineView @userStream, @rest, query.id, title, bufferSize
           @atomTwitterTimelineViewDict["__user"] = view
 
-    @userStream.on "favorite", @notifyFavorite
-
   destroy: ->
-    @publicStream.destroy()
-    @userStream.destroy()
+    @publicStream?.destroy()
+    @userStream?.destroy()
     @subscriptions.dispose()
     @modalPanel?.destroy()
     view.destroy() for view in @atomTwitterTimelineViewDict
 
   search: ->
-    @previouslyFocusedElement = $(document.activeElement)
-    @modalPanel.show()
-    @miniEditor.focus()
+    @prepare()
+    .then =>
+      @previouslyFocusedElement = $(document.activeElement)
+      @modalPanel.show()
+      @miniEditor.focus()
 
   home: ->
     return if "__user" in @atomTwitterTimelineViewDict
-    id = @userStream.connect()
-    uri = "twitter://home?id=#{id}"
-    atom.workspace.open uri, split: 'right', searchAllPanes: on
-    @close()
+
+    @prepare()
+    .then =>
+      id = @userStream.connect()
+      uri = "twitter://home?id=#{id}"
+      atom.workspace.open uri, split: 'right', searchAllPanes: on
+      @close()
 
   confirm: ->
     query = @miniEditor.getText().trim()
@@ -93,9 +98,46 @@ class AtomTwitterOpenerView extends View
     <img class="twitter info profile-image" src="#{event.source.profile_image_url}" />
     """
 
-AtomTwitterOpenerView::getConfigs = ->
-  oauth:
-    consumer_key: atom.config.get "atom-twitter.consumerKey"
-    consumer_secret: atom.config.get "atom-twitter.consumerSecret"
-    token: atom.config.get "atom-twitter.accessToken"
-    token_secret: atom.config.get "atom-twitter.accessTokenSecret"
+  isPrepared: -> @publicStream?
+
+  prepare: ->
+    new Promise (resolve, reject) =>
+      return resolve() if @isPrepared()
+
+      database.open()
+      .then (db) =>
+        db.accounts.query().filter().execute()
+        .then (accounts) =>
+          if accounts.length is 0
+            @log.info "start authentication"
+            child = window.open AUTH_URL
+            window.addEventListener "message", (message) =>
+              @log.info "store account information (user_id: #{message.data.user_id})"
+
+              child.close()
+
+              data =
+                user_id: parseInt message.data.user_id, 10
+                screen_name: message.data.screen_name
+                consumer_key: message.data.consumer_key
+                consumer_secret: message.data.consumer_secret
+                token: message.data.oauth_token
+                token_secret: message.data.oauth_token_secret
+
+              db.accounts.add data
+              .then (account) =>
+                @prepareAuth account[0]
+                resolve()
+            , off
+          else
+            @log.info "open with exist account (user_id: #{accounts[0].user_id})"
+            @prepareAuth accounts[0]
+            resolve()
+
+  prepareAuth: (account) ->
+    oauth = _.pick account, "consumer_key", "consumer_secret", "token", "token_secret"
+    @currentUserId = account.user_id
+    @rest = new TwitterRestClient oauth
+    @publicStream = new PublicStream oauth
+    @userStream = new UserStream oauth
+    @userStream.on "favorite", @notifyFavorite
