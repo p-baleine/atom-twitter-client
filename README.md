@@ -28,13 +28,3 @@ $ # apm install atom-twitter
 ### Search
 
 [Packages] -> [Twitter] -> [Search], then enter the keyword.
-
-## TODO
-
-* link in status
-* README
-* Travis?
-* task
-* connection status
-* friends -> hide follow botton
-* why open search on authentication?

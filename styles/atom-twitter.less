@@ -21,6 +21,31 @@
   font-style: normal;
 }
 
+.modal .twitter.post {
+  .content {
+    .editor {
+      font-size: 14px;
+      padding: 5px;
+      border: 1px solid @input-border-color;
+      border-radius: 5px;
+      &.is-focused {
+        border: 1px solid @input-border-color;
+      }
+    }
+  }
+
+  .counter {
+    font-size: 14px;
+    padding: 0 10px;
+    margin-bottom: 0px;
+    margin-top: 5px;
+
+    &.over {
+      color: @text-color-error;
+    }
+  }
+}
+
 .twitter.info {
     font-family: Arial, "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Osaka, "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
 
