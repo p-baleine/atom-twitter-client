@@ -6,6 +6,19 @@ Logger = require "./logger"
 
 module.exports =
 class TwitterStreamClient extends Emitter
+  @DISCONNECT_MESSAGE:
+    1: "Shutdown"
+    2: "Duplicate stream"
+    3: "Control request"
+    4: "Stall"
+    5: "Normal"
+    6: "Token revoked"
+    7: "Admin logout"
+    9: "Max message limit"
+    10: "Stream exception"
+    11: "Broker stall"
+    12: "Shed load"
+
   @STATE:
     READING_LENGTH: 0
     READING_DATA: 1
@@ -13,7 +26,7 @@ class TwitterStreamClient extends Emitter
 
   log: new Logger("TwitterStreamClient")
 
-  constructor: (@endpoint, @oauth, @options) ->
+  constructor: (@endpoint, @oauth, @options = {}) ->
     super
 
     @request = null
@@ -21,6 +34,15 @@ class TwitterStreamClient extends Emitter
     @buffer = ''
     @state = TwitterStreamClient.STATE.READING_LENGTH
     @lastError = null
+    @params = {}
+    @lastDataArrivedTime = 0
+    @reconnectingCount = 0
+    @timer = null
+    @retryTimer = null
+
+    @reconnectingInterval = @options.reconnecting_interval or 15000
+    @reconnectingTimeout = @options.reconnecting_timeout or 90000
+    @maxReconnectingCount = @options.max_reconnecting_count or 7
 
     # ensure delimited=length option
     parsed = url.parse(@endpoint, true)
@@ -29,20 +51,22 @@ class TwitterStreamClient extends Emitter
       @endpoint = url.format parsed
 
   connect: (params) ->
-    params = _.extend { url: @endpoint, oauth: @oauth }, params, @options
+    @params = params or @params
+    obj = _.extend { url: @endpoint, oauth: @oauth }, @params, @options
 
-    @log.debug "request to #{params.url}"
+    @log.debug "request to #{obj.url}"
+
+    @setReconnectingTimer()
 
     @request = request
-    .post params
+    .post obj
     .on "error", (err) => @emit "error", err
     .on "response", (response) => @emit "response", response
-    .on "end", -> @emit "error", "end" #TODO
+    .on "end", @tryReconnect
     .on "data", (data) =>
+      @lastDataArrivedTime = Date.now()
       data = data.toString("utf8")
       idx = 0
-
-      # @log.debug data
 
       while idx < data.length
         switch @state
@@ -76,6 +100,31 @@ class TwitterStreamClient extends Emitter
             @emit "error", @lastError
           else
             throw new Error "unknown state"
+
+      @emit "error", @lastError if @state is TwitterStreamClient.STATE.ABORT
+    @
+
+  setReconnectingTimer: ->
+    clearInterval @timer if @timer?
+    @timer = setInterval =>
+      return unless Date.now() - @lastDataArrivedTime >= @reconnectingTimeout
+      @log.info "no data was received in #{@reconnectingTimeout}ms, disconnection"
+      clearInterval @timer
+      @request.abort()
+    , @reconnectingInterval
+
+  tryReconnect: =>
+    return @emit "error", "streaming api is not available" if @reconnectingCount > @maxReconnectingCount
+
+    timeout = if @reconnectingCount is 0 then 0 else Math.pow(2, @reconnectingCount - 1) * 5 * 1000
+
+    @log.info "try reconnecting after #{timeout}ms"
+
+    @retryTimer = setTimeout =>
+      @connect()
+    , timeout
+
+    @reconnectingCount += 1
 
   readLine: (idx, data) ->
     end = data.indexOf "\r\n", idx
@@ -111,6 +160,8 @@ class TwitterStreamClient extends Emitter
       switch message.event
         when "favorite" then @emit "favorite", message
         else @emit "unknown event", message
+    else if message.disconnect
+      throw @DISCONNECT_MESSAGE[message.disconnect.code]
     else
       @emit "unknown", message
 
@@ -119,7 +170,7 @@ class TwitterStreamClient extends Emitter
     @log.debug arguments...
 
   destroy: ->
-    if @request?
-      @request.abort()
-      @request.destroy()
+    @request.destroy() if @request?
     @dispose()
+    clearInterval @timer
+    clearTimeout @retryTimer
