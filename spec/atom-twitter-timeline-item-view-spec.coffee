@@ -13,5 +13,5 @@ describe "AtomTwitterTimelineItemView", ->
         ]
 
     it "should apply anchor tags", ->
-      applied = AtomTwitterTimelineItemView.applyAnchorTag(tweet.text, tweet.entities.urls)
+      applied = AtomTwitterTimelineItemView.applyEntities(tweet.text, tweet.entities)
       expect(applied).toMatch /<a href="http:\/\/cas\.st\/ab556ec">cas\.st\/ab556ec<\/a>/
