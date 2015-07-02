@@ -1,5 +1,7 @@
 # atom-twitter package
 
+[![Build Status](https://travis-ci.org/p-baleine/atom-twitter.svg?branch=master)](https://travis-ci.org/p-baleine/atom-twitter.svg?branch=master)
+
 Twitter client for Atom.
 
 ![A screenshot of your package](https://raw.githubusercontent.com/p-baleine/atom-twitter/master/screenshot.png)
