@@ -1,4 +1,3 @@
-# atom-twitter package
 
 [![Build Status](https://travis-ci.org/p-baleine/atom-twitter.svg?branch=master)](https://travis-ci.org/p-baleine/atom-twitter.svg?branch=master)
 
@@ -9,8 +8,8 @@ Twitter client for Atom.
 ## Installation
 
 ```bash
-$ git clone https://github.com/p-baleine/atom-twitter.git ~/.atom/packages/atom-twitter
-$ cd ~/.atom/packages/atom-twitter && apm install
+$ git clone https://github.com/p-baleine/atom-twitter-client.git ~/.atom/packages/atom-twitter-client
+$ cd ~/.atom/packages/atom-twitter-client && apm install
 ```
 
 ### TODO  

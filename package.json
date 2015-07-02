@@ -1,5 +1,5 @@
 {
-  "name": "atom-twitter",
+  "name": "atom-twitter-client",
   "main": "./lib/main",
   "version": "0.0.1",
   "description": "Twitter client for Atom",
@@ -12,7 +12,7 @@
       "atom-twitter:tweet"
     ]
   },
-  "repository": "https://github.com/p-baleine/atom-twitter",
+  "repository": "https://github.com/p-baleine/atom-twitter-client",
   "license": "MIT",
   "engines": {
     "atom": ">=0.174.0 <2.0.0"
