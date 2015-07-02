@@ -19,6 +19,10 @@
         {
           'label': 'Home'
           'command': 'atom-twitter:home'
+        },
+        {
+          'label': 'Tweet'
+          'command': 'atom-twitter:tweet'
         }
       ]
     ]

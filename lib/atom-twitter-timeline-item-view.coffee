@@ -82,18 +82,18 @@ class AtomTwitterTimelineItemView extends View
   favorite: ->
     if @tweet.favorited
       @rest.destroyFavorite @tweet.id_str
-      .then (@tweet) =>
+      .done (@tweet) =>
         favorite = @actions.find(".favorite")
         favorite.removeClass("on")
         favorite.find(".count").text if tweet.favorite_count > 0 then tweet.favorite_count else ""
-      .catch (err) => throw err
+      , (err) => throw err
     else
       @rest.createFavorite @tweet.id_str
-      .then (@tweet) =>
+      .done (@tweet) =>
         favorite = @actions.find(".favorite")
         favorite.addClass("on")
         favorite.find(".count").text tweet.favorite_count
-      .catch (err) => throw err
+      , (err) => throw err
 
   follow: -> @notImplementedYet()
 

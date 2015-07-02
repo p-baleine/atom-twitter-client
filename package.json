@@ -8,7 +8,8 @@
   "activationCommands": {
     "atom-workspace": [
       "atom-twitter:search",
-      "atom-twitter:home"
+      "atom-twitter:home",
+      "atom-twitter:tweet"
     ]
   },
   "repository": "https://github.com/p-baleine/atom-twitter",
