@@ -35,14 +35,14 @@ class AtomTwitterTimelineItemView extends View
               class: "mdia-container"
               style: "background-image: url(#{tweet.entities.media[0].media_url_https})"
         @ul class: "actions", outlet: "actions", =>
-          @li class: "action reply", click: "reply", =>
+          @li class: "action reply", =>
             @i class: "fa fa-reply"
-          @li class: "action retweet", click: "retweet", =>
+          @li class: "action retweet", =>
             @i class: "fa fa-retweet"
             @span
               class: "count"
               if tweet.retweet_count > 0 then tweet.retweet_count else ""
-          @li class: "action favorite#{if tweet.favorited then " on" else ""}", click: "favorite", =>
+          @li class: "action favorite#{if tweet.favorited then " on" else ""}", =>
             @i class: "fa fa-star"
             @span
               class: "count"
@@ -72,9 +72,19 @@ class AtomTwitterTimelineItemView extends View
     super @tweet
     @on "refresh-time", =>
       @time.text AtomTwitterTimelineItemView.formatCreatedAt @tweet.created_at
+    @on "click", ".action.favorite", @favorite
+    @on "click", ".action.reply", @reply
+    @on "click", ".action.retweet", @retweet
 
   attached: ->
-    setTimeout(=> @removeClass 'tick', 0)
+    @timer = setTimeout(=> @removeClass 'tick', 0)
+
+  detached: ->
+    delete @tweet
+    delete @rest
+    clearTimeout @timer
+    @timer = null
+    @off()
 
   reply: -> @notImplementedYet()
   retweet: -> @notImplementedYet()
