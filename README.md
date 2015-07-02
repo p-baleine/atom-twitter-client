@@ -1,5 +1,5 @@
 
-[![Build Status](https://travis-ci.org/p-baleine/atom-twitter.svg?branch=master)](https://travis-ci.org/p-baleine/atom-twitter.svg?branch=master)
+[![Build Status](https://travis-ci.org/p-baleine/atom-twitter-client.svg?branch=master)](https://travis-ci.org/p-baleine/atom-twitter-client.svg?branch=master)
 
 Twitter client for Atom.
 

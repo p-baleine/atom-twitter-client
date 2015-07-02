@@ -5,6 +5,11 @@ module.exports =
     createInDevMode:
       default: false
       type: 'boolean'
+    timlineBufferSize:
+      default: 100
+      type: "integer"
+      description: "How many tweets a timeline keeps."
+      order: 5
     proxy:
       default: ""
       type: "string"
