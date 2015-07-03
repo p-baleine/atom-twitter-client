@@ -22,32 +22,44 @@ describe "PublicStream", ->
       expect(typeof new PublicStream().connect).toBe "function"
 
     it "should return an uuid", ->
+      stream = new PublicStream()
       expect(new PublicStream().connect()).toBe "tweet-public-abcdef"
+      stream.destroy()
 
     it "should request with POST method", ->
-      new PublicStream().connect()
+      stream = new PublicStream()
+      stream.connect()
       expect(request.post).toHaveBeenCalled()
+      stream.destroy()
 
     it "should request to /statuses/filter endpoint", ->
-      new PublicStream().connect()
+      stream = new PublicStream()
+      stream.connect()
       params = request.post.calls[0].args[0]
       expect(params.url).toMatch /https:\/\/stream\.twitter\.com\/1.1\/statuses\/filter.json/
+      stream.destroy()
 
     it "should request with oauth parameters", ->
-      new PublicStream("oauth").connect()
+      stream = new PublicStream("oauth")
+      stream.connect()
       params = request.post.calls[0].args[0]
       expect(params.oauth).not.toBe undefined
+      stream.destroy()
 
     it "should request with a specified query", ->
-      new PublicStream().connect("abcde")
+      stream = new PublicStream()
+      stream.connect("abcde")
       params = request.post.calls[0].args[0]
       expect(params.form?.track).toBe "abcde"
+      stream.destroy()
 
     describe "when instanciate with proxy", ->
       it "should request with proxy", ->
-        new PublicStream("auth", proxy: "hoge").connect()
+        stream = new PublicStream("auth", proxy: "hoge")
+        stream.connect()
         params = request.post.calls[0].args[0]
         expect(params.proxy).toBe "hoge"
+        stream.destroy()
 
     describe 'multiple queries', ->
       describe 'when two queries are specified', ->
@@ -56,6 +68,7 @@ describe "PublicStream", ->
           stream.connect("abc")
           stream.connect("def")
           expect(fakeRequest.destroy).toHaveBeenCalled()
+          stream.destroy()
 
         it 'should request with specified queries', ->
           stream = new PublicStream()
@@ -65,6 +78,7 @@ describe "PublicStream", ->
           tracks = request.post.calls[1].args[0].form.track.split ','
           expect("abc" in tracks).toBe true
           expect("def" in tracks).toBe true
+          stream.destroy()
 
   describe "on `data` event", ->
     fakeRequest =
@@ -89,6 +103,7 @@ describe "PublicStream", ->
             expect(typeof tweet).toBe "object"
             expect(tweet.text).toBe "aaa"
             called = true
+            stream.destroy()
 
           stream.connect "aaa"
 
@@ -119,3 +134,5 @@ describe "PublicStream", ->
 
         expect(onTweet1.calls.length).toBe 2
         expect(onTweet2.calls.length).toBe 1
+
+        stream.destroy()
