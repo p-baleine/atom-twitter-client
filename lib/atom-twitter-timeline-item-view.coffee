@@ -86,10 +86,10 @@ class AtomTwitterTimelineItemView extends View
     @timer = null
     @off()
 
-  reply: -> @notImplementedYet()
-  retweet: -> @notImplementedYet()
+  reply: => @notImplementedYet()
+  retweet: => @notImplementedYet()
 
-  favorite: ->
+  favorite: =>
     if @tweet.favorited
       @rest.destroyFavorite @tweet.id_str
       .done (@tweet) =>

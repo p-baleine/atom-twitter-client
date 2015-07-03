@@ -76,6 +76,9 @@ class AtomTwitterOpenerView extends View
   home: ->
     return if "__user" in @atomTwitterTimelineViewDict
 
+    @searchWordEditor.hide()
+    @tweetEditor.hide()
+
     @prepare()
     .done =>
       id = @userStream.connect()
