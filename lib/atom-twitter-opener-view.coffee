@@ -27,7 +27,7 @@ class AtomTwitterOpenerView extends View
   log: new Logger("AtomTwitterOpenerView")
 
   initialize: (state) ->
-    bufferSize = atom.config.get "atom-twitter.timlineBufferSize"
+    bufferSize = atom.config.get "atom-twitter.timlineBufferSize" or 50
 
     @modalPanel = atom.workspace.addModalPanel(item: @)
 

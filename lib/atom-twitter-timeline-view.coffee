@@ -16,9 +16,14 @@ class AtomTwitterTimelineView extends ScrollView
     super
     @stream.on 'error', (err) -> throw err
     @stream.on @id, @addItem
-    setInterval =>
+    @timer = setInterval =>
       @list.find(".tweet").trigger "refresh-time"
     , @REFRESH_TIME_INTERVAL
+
+  ditached: ->
+    @stream.off @id, @addItem
+    clearInterval @timer
+    @timer = null
 
   addItem: (tweet) =>
     @list.find(".tweet")[-1..].remove() if @list.find(".tweet").length > @bufferSize
