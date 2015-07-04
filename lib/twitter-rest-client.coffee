@@ -2,6 +2,7 @@ _ = require "underscore"
 Logger = require "./logger"
 Promise = require "bluebird"
 request = require "request"
+querystring = require "querystring"
 
 module.exports =
 class TwitterRestClient
@@ -15,8 +16,9 @@ class TwitterRestClient
   destroyFavorite: (id) ->
     @post "/favorites/destroy.json?id=#{id}"
 
-  updateStatus: (status) ->
-    @post "/statuses/update.json?status=#{encodeURIComponent status}"
+  updateStatus: (status, opts) ->
+    qs = querystring.stringify _.extend(status: status, opts)
+    @post "/statuses/update.json?#{qs}"
 
   getConfiguration: ->
     @get "/help/configuration.json"

@@ -24,7 +24,9 @@ class AtomTwitterTweetEditorView extends View
     @model = @tweet.getModel()
     @model.onDidStopChanging => @updateCount()
 
-  setUp: (@parent, @configuration, @rest) ->
+  setUp: (@parent, @configuration, @rest, @optionalTweet) ->
+    @model.getBuffer().setText "@#{@optionalTweet.user.screen_name} " if @optionalTweet
+
 
   updateCount: ->
     text = @model.getBuffer().getText()
@@ -38,7 +40,7 @@ class AtomTwitterTweetEditorView extends View
     return if isOver
     @parent.close()
     @model.getBuffer().setText ""
-    @rest.updateStatus text
+    @rest.updateStatus text, in_reply_to_status_id: @optionalTweet?.user.id
     .done utils.noop, (err) -> throw err
 
   focus: -> @tweet.focus()

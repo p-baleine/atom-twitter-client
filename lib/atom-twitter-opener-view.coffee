@@ -40,6 +40,8 @@ class AtomTwitterOpenerView extends View
     @subscriptions.add atom.commands.add 'atom-workspace', 'atom-twitter:home': => @home()
     @subscriptions.add atom.commands.add 'atom-workspace', 'atom-twitter:tweet': => @tweet()
 
+    @on 'atom-twitter:tweet', @tweet
+
     atom.workspace.addOpener (uriToOpen) =>
       {protocol, host, pathname, query} = url.parse uriToOpen, on
       return unless protocol is 'twitter:'
@@ -47,11 +49,11 @@ class AtomTwitterOpenerView extends View
       switch host
         when "search"
           title = "#{query.q} - Twitter Search"
-          view = new AtomTwitterTimelineView @publicStream, @rest, query.id, title, bufferSize
+          view = new AtomTwitterTimelineView @, @publicStream, @rest, query.id, title, bufferSize
           @atomTwitterTimelineViewDict[query.q] = view
         when "home"
           title = "Twitter Home"
-          view = new AtomTwitterTimelineView @userStream, @rest, query.id, title, bufferSize
+          view = new AtomTwitterTimelineView @, @userStream, @rest, query.id, title, bufferSize
           @atomTwitterTimelineViewDict["__user"] = view
 
   destroy: ->
@@ -87,12 +89,12 @@ class AtomTwitterOpenerView extends View
       @close()
     , (err) -> throw err
 
-  tweet: ->
+  tweet: (_event, options) =>
     @searchWordEditor.hide()
 
     @prepare()
     .done =>
-      @tweetEditor.setUp @, @configuration, @rest
+      @tweetEditor.setUp @, @configuration, @rest, options
       @previouslyFocusedElement = $(document.activeElement)
       @modalPanel.show()
       @searchWordEditor.hide()

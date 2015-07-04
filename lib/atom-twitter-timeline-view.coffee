@@ -12,7 +12,7 @@ class AtomTwitterTimelineView extends ScrollView
       @div class: 'panel-body padded', =>
         @ul class: 'tweets', outlet: 'list'
 
-  initialize: (@stream, @rest, @id, @query, @bufferSize) ->
+  initialize: (@opener, @stream, @rest, @id, @query, @bufferSize) ->
     super
     @stream.on 'error', (err) -> throw err
     @stream.on @id, @addItem
@@ -28,6 +28,6 @@ class AtomTwitterTimelineView extends ScrollView
   addItem: (tweet) =>
     @list.find(".tweet")[-1..].remove() if @list.find(".tweet").length > @bufferSize
     tweet = _.extend {}, tweet.retweeted_status, retweeted_by: tweet.user if tweet.retweeted_status?
-    @list.prepend new AtomTwitterTimelineItemView tweet, @rest
+    @list.prepend new AtomTwitterTimelineItemView @opener, tweet, @rest
 
   getTitle: -> @query
