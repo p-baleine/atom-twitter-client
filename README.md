@@ -8,19 +8,14 @@ Twitter client for Atom.
 ## Installation
 
 ```bash
-$ git clone https://github.com/p-baleine/atom-twitter-client.git ~/.atom/packages/atom-twitter-client
-$ cd ~/.atom/packages/atom-twitter-client && apm install
-```
-
-### TODO  
-
-Register this package to atom.io.
-
-```bash
-$ # apm install atom-twitter-client
+apm install atom-twitter-client
 ```
 
 ## Usage
+
+### tweet
+
+[Packages] -> [Twitter] -> [Tweet]
 
 ### Home timeline
 
