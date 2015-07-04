@@ -27,6 +27,9 @@ class TwitterRestClient
     @get "/mutes/users/ids.json"
     .then (mutes) -> mutes.ids
 
+  doRetweet: (id) ->
+    @post "/statuses/retweet/#{id}.json"
+
   get: (endpoint) ->
     @log.debug "request to #{endpoint}"
 

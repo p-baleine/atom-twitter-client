@@ -1,5 +1,6 @@
 moment = require 'moment-twitter'
 {View} = require 'atom-space-pen-views'
+utils = require "./utils"
 
 module.exports =
 class AtomTwitterTimelineItemView extends View
@@ -37,7 +38,7 @@ class AtomTwitterTimelineItemView extends View
         @ul class: "actions", outlet: "actions", =>
           @li class: "action reply", =>
             @i class: "fa fa-reply"
-          @li class: "action retweet", =>
+          @li class: "action retweet#{if tweet.favorited then " on" else ""}", =>
             @i class: "fa fa-retweet"
             @span
               class: "count"
@@ -88,7 +89,14 @@ class AtomTwitterTimelineItemView extends View
   reply: =>
     @opener.trigger "atom-twitter:tweet", @tweet
 
-  retweet: => @notImplementedYet()
+  retweet: =>
+    return if @tweet.retweeted
+    @rest.doRetweet @tweet.id_str
+    .done (@tweet) =>
+      retweet = @actions.find(".retweet")
+      retweet.addClass("on")
+      retweet.find(".count").text tweet.retweet_count
+    , (err) => throw err
 
   favorite: =>
     if @tweet.favorited
@@ -106,14 +114,4 @@ class AtomTwitterTimelineItemView extends View
         favorite.find(".count").text tweet.favorite_count
       , (err) => throw err
 
-  follow: -> @notImplementedYet()
-
-  notImplementedYet: ->
-    atom.notifications.addInfo """
-    This feature is not implemented yet.
-
-    PR is welcome and if you can't wait for implementation of this feature,
-    please send your pull request!
-
-    https://github.com/p-baleine/atom-twitter
-    """
+  follow: -> utils.notImplementedYet()
