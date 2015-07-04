@@ -57,7 +57,6 @@ class AtomTwitterTimelineItemView extends View
     idx = 0
     result = ""
 
-    # sortしてから？
     for name, entity of entities
       switch name
         when "urls"
@@ -67,7 +66,7 @@ class AtomTwitterTimelineItemView extends View
 
     result + text[idx..]
 
-  constructor: (@tweet, @rest) ->
+  constructor: (@opener, @tweet, @rest) ->
     @tweet.text = AtomTwitterTimelineItemView.applyEntities @tweet.text, @tweet.entities
     super @tweet
     @on "refresh-time", =>
@@ -86,7 +85,9 @@ class AtomTwitterTimelineItemView extends View
     @timer = null
     @off()
 
-  reply: => @notImplementedYet()
+  reply: =>
+    @opener.trigger "atom-twitter:tweet", @tweet
+
   retweet: => @notImplementedYet()
 
   favorite: =>
