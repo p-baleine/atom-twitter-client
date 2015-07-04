@@ -1,10 +1,9 @@
 {
   "name": "atom-twitter-client",
   "main": "./lib/main",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Twitter client for Atom",
-  "keywords": [
-  ],
+  "keywords": [],
   "activationCommands": {
     "atom-workspace": [
       "atom-twitter:search",
