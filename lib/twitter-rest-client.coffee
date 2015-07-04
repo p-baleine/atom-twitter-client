@@ -23,6 +23,10 @@ class TwitterRestClient
   getConfiguration: ->
     @get "/help/configuration.json"
 
+  getMutedUserIds: ->
+    @get "/mutes/users/ids.json"
+    .then (mutes) -> mutes.ids
+
   get: (endpoint) ->
     @log.debug "request to #{endpoint}"
 

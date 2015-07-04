@@ -21,7 +21,7 @@ class AtomTwitterOpenerView extends View
 
   @content: ->
     @div class: 'twitter-opener', =>
-      @subview 'searchWordEditor', new TextEditorView mini: true, placeholderText: "Search..."
+      @subview 'searchWordEditor', new TextEditorView mini: true, placeholderText: "Search tweets..."
       @subview "tweetEditor", new AtomTwitterTweetEditorView
 
   log: new Logger("AtomTwitterOpenerView")
@@ -53,7 +53,7 @@ class AtomTwitterOpenerView extends View
           @atomTwitterTimelineViewDict[query.q] = view
         when "home"
           title = "Twitter Home"
-          view = new AtomTwitterTimelineView @, @userStream, @rest, query.id, title, bufferSize
+          view = new AtomTwitterTimelineView @, @userStream, @rest, query.id, title, bufferSize, @mutedUserIds
           @atomTwitterTimelineViewDict["__user"] = view
 
   destroy: ->
@@ -140,9 +140,10 @@ class AtomTwitterOpenerView extends View
         @userStream = new UserStream oauth
         @userStream.on "favorite", @notifyFavorite
 
-        @getConfiguration()
-      .then (configuration) =>
-        @configuration = configuration
+        @rest.getConfiguration()
+      .then (@configuration) =>
+        @rest.getMutedUserIds()
+      .then (@mutedUserIds) =>
         resolve()
       .catch reject
 
@@ -174,6 +175,3 @@ class AtomTwitterOpenerView extends View
           else
             @log.debug "open with exist account (user_id: #{accounts[0].user_id})"
             resolve accounts[0]
-
-  getConfiguration: ->
-    @rest.getConfiguration()
