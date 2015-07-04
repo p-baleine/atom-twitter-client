@@ -13,7 +13,7 @@ apm install atom-twitter-client
 
 ## Usage
 
-### tweet
+### Tweet
 
 [Packages] -> [Twitter] -> [Tweet]
 

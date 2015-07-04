@@ -15,7 +15,7 @@ class AtomTwitterTimelineView extends ScrollView
           @p class: "inline-block", "fetching..."
         @ul class: 'tweets', outlet: 'list'
 
-  initialize: (@opener, @stream, @rest, @id, @query, @bufferSize, @mutedUserIds) ->
+  initialize: (@stream, @rest, @id, @query, @bufferSize, @eventBus, @mutedUserIds) ->
     super
     @stream.on 'error', (err) -> throw err
     @stream.on "response", @removeLoadingImage
@@ -35,6 +35,6 @@ class AtomTwitterTimelineView extends ScrollView
     return if @mutedUserIds and @mutedUserIds.indexOf(tweet.user.id) isnt -1
     @list.find(".tweet")[-1..].remove() if @list.find(".tweet").length > @bufferSize
     tweet = _.extend {}, tweet.retweeted_status, retweeted_by: tweet.user if tweet.retweeted_status?
-    @list.prepend new AtomTwitterTimelineItemView @opener, tweet, @rest
+    @list.prepend new AtomTwitterTimelineItemView tweet, @rest, @eventBus
 
   getTitle: -> @query

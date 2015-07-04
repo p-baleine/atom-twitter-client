@@ -67,7 +67,7 @@ class AtomTwitterTimelineItemView extends View
 
     result + text[idx..]
 
-  constructor: (@opener, @tweet, @rest) ->
+  constructor: (@tweet, @rest, @eventBus) ->
     @tweet.text = AtomTwitterTimelineItemView.applyEntities @tweet.text, @tweet.entities
     super @tweet
     @on "refresh-time", =>
@@ -87,7 +87,7 @@ class AtomTwitterTimelineItemView extends View
     @off()
 
   reply: =>
-    @opener.trigger "atom-twitter:tweet", @tweet
+    @eventBus.emit "atom-twitter:tweet", @tweet
 
   retweet: =>
     return if @tweet.retweeted

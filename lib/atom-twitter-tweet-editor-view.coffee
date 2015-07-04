@@ -40,7 +40,7 @@ class AtomTwitterTweetEditorView extends View
     return if isOver
     @parent.close()
     @model.getBuffer().setText ""
-    @rest.updateStatus text, in_reply_to_status_id: @optionalTweet?.user.id
+    @rest.updateStatus text, in_reply_to_status_id: @optionalTweet?.id_str
     .done utils.noop, (err) -> throw err
 
   focus: -> @tweet.focus()

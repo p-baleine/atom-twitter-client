@@ -1,7 +1,7 @@
 _ = require "underscore"
 {$, View, TextEditorView} = require 'atom-space-pen-views'
 AtomTwitterTimelineView = require './atom-twitter-timeline-view'
-{CompositeDisposable} = require 'atom'
+{CompositeDisposable, Emitter} = require 'atom'
 database = require "./database"
 Logger = require "./logger"
 Promise = require "bluebird"
@@ -31,6 +31,8 @@ class AtomTwitterOpenerView extends View
 
     @modalPanel = atom.workspace.addModalPanel(item: @)
 
+    @eventBus = new Emitter
+
     atom.commands.add @element,
       'core:confirm': => @confirm()
       'core:cancel': => @close()
@@ -39,8 +41,7 @@ class AtomTwitterOpenerView extends View
     @subscriptions.add atom.commands.add 'atom-workspace', 'atom-twitter:search': => @search()
     @subscriptions.add atom.commands.add 'atom-workspace', 'atom-twitter:home': => @home()
     @subscriptions.add atom.commands.add 'atom-workspace', 'atom-twitter:tweet': => @tweet()
-
-    @on 'atom-twitter:tweet', @tweet
+    @eventBus.on 'atom-twitter:tweet', @tweet
 
     atom.workspace.addOpener (uriToOpen) =>
       {protocol, host, pathname, query} = url.parse uriToOpen, on
@@ -49,11 +50,11 @@ class AtomTwitterOpenerView extends View
       switch host
         when "search"
           title = "#{query.q} - Twitter Search"
-          view = new AtomTwitterTimelineView @, @publicStream, @rest, query.id, title, bufferSize
+          view = new AtomTwitterTimelineView @publicStream, @rest, query.id, title, bufferSize, @eventBus
           @atomTwitterTimelineViewDict[query.q] = view
         when "home"
           title = "Twitter Home"
-          view = new AtomTwitterTimelineView @, @userStream, @rest, query.id, title, bufferSize, @mutedUserIds
+          view = new AtomTwitterTimelineView  @userStream, @rest, query.id, title, bufferSize, @eventBus, @mutedUserIds
           @atomTwitterTimelineViewDict["__user"] = view
 
   destroy: ->
@@ -89,7 +90,7 @@ class AtomTwitterOpenerView extends View
       @close()
     , (err) -> throw err
 
-  tweet: (_event, options) =>
+  tweet: (options) =>
     @searchWordEditor.hide()
 
     @prepare()
