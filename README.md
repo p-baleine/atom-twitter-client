@@ -3,7 +3,7 @@
 
 Twitter client for Atom.
 
-![A screenshot of your package](https://raw.githubusercontent.com/p-baleine/atom-twitter/master/screenshot.png)
+![A screenshot of your package](https://raw.githubusercontent.com/p-baleine/atom-twitter-client/master/screenshot.png)
 
 ## Installation
 
@@ -17,7 +17,7 @@ $ cd ~/.atom/packages/atom-twitter-client && apm install
 Register this package to atom.io.
 
 ```bash
-$ # apm install atom-twitter
+$ # apm install atom-twitter-client
 ```
 
 ## Usage

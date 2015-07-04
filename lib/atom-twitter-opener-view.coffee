@@ -27,7 +27,7 @@ class AtomTwitterOpenerView extends View
   log: new Logger("AtomTwitterOpenerView")
 
   initialize: (state) ->
-    bufferSize = atom.config.get "atom-twitter.timlineBufferSize" or 50
+    bufferSize = atom.config.get "atom-twitter-client.timlineBufferSize" or 50
 
     @modalPanel = atom.workspace.addModalPanel(item: @)
 
@@ -153,10 +153,10 @@ class AtomTwitterOpenerView extends View
         db.accounts.query().filter().execute()
         .then (accounts) =>
           if accounts.length is 0
-            @log.info "start authentication"
+            @log.debug "start authentication"
             child = window.open AUTH_URL
             window.addEventListener "message", (message) =>
-              @log.info "store account information (user_id: #{message.data.user_id})"
+              @log.debug "store account information (user_id: #{message.data.user_id})"
 
               child.close()
 
@@ -172,7 +172,7 @@ class AtomTwitterOpenerView extends View
                 resolve account[0]
             , off
           else
-            @log.info "open with exist account (user_id: #{accounts[0].user_id})"
+            @log.debug "open with exist account (user_id: #{accounts[0].user_id})"
             resolve accounts[0]
 
   getConfiguration: ->

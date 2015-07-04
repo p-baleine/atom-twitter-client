@@ -1,7 +1,7 @@
 format = require("util").format
 moment = require("moment-twitter")
 
-development = atom.config.get "atom-twitter.createInDevMode"
+development = atom.config.get "atom-twitter-client.createInDevMode"
 
 module.exports =
 class Logger
@@ -14,7 +14,7 @@ class Logger
   debug: -> @print "debug", arguments...
 
   print: (level, args...) ->
-    return if @[level.toUpperCase()] < @level
+    return if @[level.toUpperCase()] <= @level
     header = format "[%s] %s:", moment().format(), @tag
     console[level].apply console, [header].concat args
 

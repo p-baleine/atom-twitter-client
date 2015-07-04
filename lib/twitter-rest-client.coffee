@@ -24,7 +24,7 @@ class TwitterRestClient
     @get "/help/configuration.json"
 
   get: (endpoint) ->
-    @log.info "request to #{endpoint}"
+    @log.debug "request to #{endpoint}"
 
     new Promise (resolve, reject) =>
       buffer = ""
@@ -41,7 +41,7 @@ class TwitterRestClient
       .on "error", (err) -> reject err
 
   post: (endpoint) ->
-    @log.info "request to #{endpoint}"
+    @log.debug "request to #{endpoint}"
 
     new Promise (resolve, reject) =>
       buffer = ""

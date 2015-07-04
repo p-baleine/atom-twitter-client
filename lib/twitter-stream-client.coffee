@@ -108,7 +108,7 @@ class TwitterStreamClient extends Emitter
     clearInterval @timer if @timer?
     @timer = setInterval =>
       return unless Date.now() - @lastDataArrivedTime >= @reconnectingTimeout
-      @log.info "no data was received in #{@reconnectingTimeout}ms, disconnection"
+      @log.debug "no data was received in #{@reconnectingTimeout}ms, disconnection"
       clearInterval @timer
       @request.abort()
     , @reconnectingInterval
@@ -118,7 +118,7 @@ class TwitterStreamClient extends Emitter
 
     timeout = if @reconnectingCount is 0 then 0 else Math.pow(2, @reconnectingCount - 1) * 5 * 1000
 
-    @log.info "try reconnecting after #{timeout}ms"
+    @log.debug "try reconnecting after #{timeout}ms"
 
     @retryTimer = setTimeout =>
       @connect()
