@@ -17,13 +17,13 @@
     "atom": ">=0.174.0 <2.0.0"
   },
   "dependencies": {
-    "atom-space-pen-views": "*",
-    "bluebird": "*",
-    "db.js": "*",
-    "font-awesome": "*",
-    "moment-twitter": "*",
-    "request": "*",
-    "uuid": "*",
-    "underscore": "*"
+    "atom-space-pen-views": "^2.0.5",
+    "bluebird": "^2.9.30",
+    "db.js": "^0.10.1",
+    "font-awesome": "^4.3.0",
+    "moment-twitter": "^0.2.0",
+    "request": "2.58.0",
+    "uuid": "^2.0.1",
+    "underscore": "^1.8.3"
   }
 }
