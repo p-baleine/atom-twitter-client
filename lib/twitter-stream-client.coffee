@@ -65,6 +65,7 @@ class TwitterStreamClient extends Emitter
     .on "end", @tryReconnect
     .on "data", (data) =>
       @lastDataArrivedTime = Date.now()
+      clearTimeout @retryTimer if @retryTimer?
       data = data.toString("utf8")
       idx = 0
 
@@ -111,6 +112,10 @@ class TwitterStreamClient extends Emitter
       @log.debug "no data was received in #{@reconnectingTimeout}ms, disconnection"
       clearInterval @timer
       @request.abort()
+      @length = 0
+      @clearBuffer()
+      @state = TwitterStreamClient.STATE.READING_LENGTH
+      @reconnectingCount = 0
     , @reconnectingInterval
 
   tryReconnect: =>
