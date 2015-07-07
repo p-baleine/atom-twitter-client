@@ -171,5 +171,5 @@ describe "TwitterStreamClient", ->
         , 1000
 
         runs ->
-          expect(request.post.callCount).toBe 2
+          expect(request.post.callCount).toBeGreaterThan 2
           stream.destroy()
