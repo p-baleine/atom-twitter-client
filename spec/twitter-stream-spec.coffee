@@ -15,7 +15,7 @@ describe "PublicStream", ->
 
     beforeEach ->
       spyOn(request, "post").andCallFake -> fakeRequest
-      spyOn(fakeRequest, "destroy").andCallFake -> fakeRequest
+      spyOn(fakeRequest, "abort").andCallFake -> fakeRequest
       spyOn(uuid, "v4").andCallFake -> "abcdef"
 
     it "should be a function", ->
@@ -53,7 +53,8 @@ describe "PublicStream", ->
       expect(params.form?.track).toBe "abcde"
       stream.destroy()
 
-    describe "when instanciate with proxy", ->
+    # TODO remove proxy
+    xdescribe "when instanciate with proxy", ->
       it "should request with proxy", ->
         stream = new PublicStream("auth", proxy: "hoge")
         stream.connect()
@@ -63,11 +64,11 @@ describe "PublicStream", ->
 
     describe 'multiple queries', ->
       describe 'when two queries are specified', ->
-        it 'should destroy old connection', ->
+        it 'should abort old connection', ->
           stream = new PublicStream()
           stream.connect("abc")
           stream.connect("def")
-          expect(fakeRequest.destroy).toHaveBeenCalled()
+          expect(fakeRequest.abort).toHaveBeenCalled()
           stream.destroy()
 
         it 'should request with specified queries', ->
