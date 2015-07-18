@@ -1,7 +1,7 @@
 {
   "name": "atom-twitter-client",
   "main": "./lib/main",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Twitter client for Atom",
   "keywords": [
     "twitter"
