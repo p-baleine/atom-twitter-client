@@ -1,6 +1,5 @@
 uuid = require 'uuid'
 {Emitter} = require 'atom'
-# TwitterStreamClient = require "./twitter-stream-client"
 {userStream, publicStream} = require "twitter-streaming-client"
 
 class TwitterStream extends Emitter
@@ -45,11 +44,11 @@ class PublicStream extends TwitterStream
     id
 
 class UserStream extends TwitterStream
-  initialize: ->
-    @client = userStream @oauth
-
   connect: ->
     id = "tweet-user"
+
+    @client.close() if @client?
+    @client = userStream @oauth
 
     @client.on "status", (status) => @emit id, status
     @client.on "error", @onError

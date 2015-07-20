@@ -17,6 +17,8 @@ class AtomTwitterTimelineView extends ScrollView
 
   initialize: (@stream, @rest, @id, @query, @bufferSize, @eventBus, @mutedUserIds) ->
     super
+
+  attached: () ->
     @stream.on 'error', (err) -> throw err
     @stream.on "response", @removeLoadingImage
     @stream.on @id, @addItem
@@ -26,7 +28,7 @@ class AtomTwitterTimelineView extends ScrollView
 
   removeLoadingImage: => @loading.hide()
 
-  ditached: ->
+  detached: ->
     @stream.off @id, @addItem
     clearInterval @timer
     @timer = null
