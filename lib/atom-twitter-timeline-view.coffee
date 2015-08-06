@@ -26,6 +26,14 @@ class AtomTwitterTimelineView extends ScrollView
       @list.find(".tweet").trigger "refresh-time"
     , @REFRESH_TIME_INTERVAL
 
+    @rest.getHomeTimeline(atom.config.get "atom-twitter-client.homeTimelineLasts").then((data) =>
+      data = data.reverse()
+
+      for tweet in data
+        @addItem(tweet)
+    )
+
+
   removeLoadingImage: => @loading.hide()
 
   detached: ->

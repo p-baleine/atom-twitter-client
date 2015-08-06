@@ -30,6 +30,9 @@ class TwitterRestClient
   doRetweet: (id) ->
     @post "/statuses/retweet/#{id}.json"
 
+  getHomeTimeline: (count) ->
+    @get "/statuses/home_timeline.json?count=#{count}"
+
   get: (endpoint) ->
     @log.debug "request to #{endpoint}"
 
