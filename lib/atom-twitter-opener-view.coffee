@@ -1,6 +1,6 @@
 _ = require "underscore"
 {$, View, TextEditorView} = require 'atom-space-pen-views'
-AtomTwitterTimelineView = require './atom-twitter-timeline-view'
+{UserTimelineView, PublicTimelineView} = require './atom-twitter-timeline-view'
 {CompositeDisposable, Emitter} = require 'atom'
 database = require "./database"
 Logger = require "./logger"
@@ -50,11 +50,11 @@ class AtomTwitterOpenerView extends View
       switch host
         when "search"
           title = "#{query.q} - Twitter Search"
-          view = new AtomTwitterTimelineView @publicStream, @rest, query.id, title, bufferSize, @eventBus
+          view = new PublicTimelineView @publicStream, @rest, query.id, title, bufferSize, @eventBus
           @atomTwitterTimelineViewDict[query.q] = view
         when "home"
           title = "Twitter Home"
-          view = new AtomTwitterTimelineView  @userStream, @rest, query.id, title, bufferSize, @eventBus, @mutedUserIds
+          view = new UserTimelineView @userStream, @rest, query.id, title, bufferSize, @eventBus, @mutedUserIds
           @atomTwitterTimelineViewDict["__user"] = view
 
   destroy: ->
