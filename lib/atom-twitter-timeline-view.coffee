@@ -3,7 +3,6 @@ AtomTwitterTimelineItemView = require "./atom-twitter-timeline-item-view"
 {ScrollView} = require 'atom-space-pen-views'
 TwitterStream = require './twitter-stream'
 
-module.exports =
 class AtomTwitterTimelineView extends ScrollView
   REFRESH_TIME_INTERVAL: 60000
 
@@ -26,14 +25,6 @@ class AtomTwitterTimelineView extends ScrollView
       @list.find(".tweet").trigger "refresh-time"
     , @REFRESH_TIME_INTERVAL
 
-    @rest.getHomeTimeline(atom.config.get "atom-twitter-client.homeTimelineLasts").then((data) =>
-      data = data.reverse()
-
-      for tweet in data
-        @addItem(tweet)
-    )
-
-
   removeLoadingImage: => @loading.hide()
 
   detached: ->
@@ -48,3 +39,13 @@ class AtomTwitterTimelineView extends ScrollView
     @list.prepend new AtomTwitterTimelineItemView tweet, @rest, @eventBus
 
   getTitle: -> @query
+
+exports.PublicTimelineView = class PublicTimelineView extends AtomTwitterTimelineView
+exports.UserTimelineView = class UserTimelineView extends AtomTwitterTimelineView
+  attached: () ->
+    super
+
+    @rest.getHomeTimeline(atom.config.get "atom-twitter-client.homeTimelineLasts")
+    .then (data) =>
+      data = data.reverse()
+      @addItem tweet for tweet in data
