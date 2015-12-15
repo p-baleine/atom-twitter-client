@@ -36,7 +36,7 @@ class AtomTwitterTimelineView extends ScrollView
     return if @mutedUserIds and @mutedUserIds.indexOf(tweet.user.id) isnt -1
     @list.find(".tweet")[-1..].remove() if @list.find(".tweet").length > @bufferSize
     tweet = _.extend {}, tweet.retweeted_status, retweeted_by: tweet.user if tweet.retweeted_status?
-    @list.prepend new AtomTwitterTimelineItemView tweet, @rest, @eventBus
+    @list.prepend(new AtomTwitterTimelineItemView tweet, @rest, @eventBus)
 
   getTitle: -> @query
 
