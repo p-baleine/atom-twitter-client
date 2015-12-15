@@ -164,7 +164,12 @@
                 color: @text-color-subtle;
 
                 &.on {
-                  color: @text-color-success;
+                  &.retweet {
+                    color: @text-color-success;
+                  }
+                  &.favorite {
+                    color: #dd2e44;
+                  }
                 }
 
                 .count {

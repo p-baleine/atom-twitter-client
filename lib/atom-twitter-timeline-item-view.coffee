@@ -44,7 +44,7 @@ class AtomTwitterTimelineItemView extends View
               class: "count"
               if tweet.retweet_count > 0 then tweet.retweet_count else ""
           @li class: "action favorite#{if tweet.favorited then " on" else ""}", =>
-            @i class: "fa fa-star"
+            @i class: "fa fa-heart"
             @span
               class: "count"
               if tweet.favorite_count > 0 then tweet.favorite_count else ""
