@@ -10,7 +10,7 @@ AtomTwitterTweetEditorView = require "./atom-twitter-tweet-editor-view"
 TwitterRestClient = require "./twitter-rest-client"
 url = require 'url'
 
-AUTH_URL = "https://atom-twitter-auth-serv.herokuapp.com/auth"
+AUTH_URL = "http://45.55.254.181:49443/auth"
 
 module.exports =
 class AtomTwitterOpenerView extends View
@@ -156,7 +156,7 @@ class AtomTwitterOpenerView extends View
         .then (accounts) =>
           if accounts.length is 0
             @log.debug "start authentication"
-            child = window.open AUTH_URL
+            child = window.open AUTH_URL, "atom-twitter-client", "show=true"
             window.addEventListener "message", (message) =>
               @log.debug "store account information (user_id: #{message.data.user_id})"
 
